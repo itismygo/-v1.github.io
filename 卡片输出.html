@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result</title>
+    <link rel="stylesheet" href="卡片输出.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" integrity="sha512-fHwaWebuwA7NSF5Qg/af4UeDx9XqUpYpOGgubo3yWu+b2IQR4UeQwbb42Ti7gVAjNtVoI/I9TEoYeu9omwcC6g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js" integrity="sha512-LQNxIMR5rXv7o+b1l8+N1EZMfhG7iFZ9HhnbJkTp4zjNr5Wvst75AqUeFDxeRUa7l5vEDyUiAip//r+EFLLCyA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js" integrity="sha512-iWiuBS5nt6r60fCz26Nd0Zqe0nbk1ZTIQbl3Kv7kYsX+yKMUFHzjaH2+AnM6vp2Xs+gNmaBAVWJjSmuPw76Efg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+    <div class="top-bar">
+        <button class="back-button">
+            <i class="back-arrow"></i>
+        </button>
+    </div>
+
+    <div class="results-container">
+        <div id="geminiResults">
+            <p>正在加载搜索结果...</p>
+        </div>
+
+        <button class="dark-mode-toggle" aria-label="切换深色/浅色模式">🌙</button>
+    </div>
+
+    <script>
+        // 函数定义：将 Markdown 数据解析为带居中加粗标题的卡片并显示
+        function displayMarkdownAsCardsWithCenteredAndBoldTitles(data, separator) {
+            const resultsDiv = document.getElementById('geminiResults');
+            resultsDiv.innerHTML = ''; // 清空旧内容
+            let cardIndex = 0;
+
+            if (data?.candidates?.[0]?.content?.parts) {
+                data.candidates[0].content.parts.forEach(part => {
+                    if (part.text) {
+                        const sections = part.text.split(new RegExp(`^${separator}\\s*$`, 'm'));
+
+                        sections.forEach(section => {
+                            if (section.trim() !== '') {
+                                const cardDiv = document.createElement('div');
+                                cardDiv.classList.add('markdown-card');
+
+                                const lines = section.trim().split('\n');
+                                let centeredBoldTitleHTML = '';
+                                let contentWithoutTitle = section.trim();
+
+                                // 处理标题：如果第一行以 # 开头，则提取为居中加粗标题
+                                if (lines.length > 0 && lines[0].startsWith('#')) {
+                                    let titleHtml = marked.parse(lines[0]).trim();
+                                    if (titleHtml.startsWith('<p>') && titleHtml.endsWith('</p>')) {
+                                        titleHtml = titleHtml.slice(3, -4);
+                                    }
+                                    centeredBoldTitleHTML = `<div style="text-align: center; margin-bottom: 10px;"><strong>${titleHtml}</strong></div>`;
+                                    contentWithoutTitle = lines.slice(1).join('\n').trim();
+                                } else if (lines.length > 0) {
+                                    // 如果第一行不是标准标题，但作为居中加粗标题显示
+                                    let firstLineHtml = marked.parse(lines[0]).trim();
+                                    if (firstLineHtml.startsWith('<p>') && firstLineHtml.endsWith('</p>')) {
+                                        firstLineHtml = firstLineHtml.slice(3, -4);
+                                    }
+                                    centeredBoldTitleHTML = `<div style="text-align: center; margin-bottom: 10px;"><strong>${firstLineHtml}</strong></div>`;
+                                    contentWithoutTitle = lines.slice(1).join('\n').trim();
+                                }
+
+                                const htmlContent = centeredBoldTitleHTML + marked.parse(contentWithoutTitle);
+                                cardDiv.innerHTML = htmlContent;
+
+                                // 设置动画延迟
+                                cardDiv.style.setProperty('--animation-order', cardIndex);
+                                cardIndex++;
+
+                                resultsDiv.appendChild(cardDiv);
+                            }
+                        });
+                    }
+                });
+
+                // 渲染 KaTeX 数学公式
+                renderMathInElement(resultsDiv, {
+                    delimiters: [
+                        { left: '$', right: '$', display: false },
+                        { left: '\\(', right: '\\)', display: false },
+                        { left: '\\[', right: '\\]', display: true },
+                        { left: '$$', right: '$$', display: true }
+                    ],
+                    throwOnError: false
+                });
+
+            } else {
+                resultsDiv.innerHTML = '<p>未找到合适的回复。</p>';
+            }
+        }
+
+        // DOMContentLoaded 事件监听器 for 卡片输出.html
+        document.addEventListener('DOMContentLoaded', () => {
+            const resultsDiv = document.getElementById('geminiResults');
+            const backButton = document.querySelector('.back-button');
+            const toggleButton = document.querySelector('.dark-mode-toggle'); // 获取深浅色切换按钮
+            const body = document.body; // 获取 body 元素
+
+            // 返回按钮逻辑
+            if (backButton) {
+                backButton.addEventListener('click', () => {
+                    window.history.back();
+                });
+            }
+
+            // === 深浅色模式处理逻辑 ===
+            // 检查本地存储中是否有深色模式的偏好
+            const isDarkModePreferred = localStorage.getItem('darkMode') === 'enabled';
+
+            // 根据偏好设置初始化深色模式
+            if (isDarkModePreferred) {
+                body.classList.add('dark-mode');
+                if (toggleButton) { // 确保按钮存在再设置文本
+                    toggleButton.textContent = '☀️';
+                    toggleButton.setAttribute('aria-label', '切换浅色模式');
+                }
+            } else {
+                 if (toggleButton) { // 确保按钮存在再设置文本
+                    toggleButton.textContent = '🌙';
+                    toggleButton.setAttribute('aria-label', '切换深色模式');
+                }
+            }
+
+            // 切换深色/浅色模式事件监听器
+            if (toggleButton) {
+                toggleButton.addEventListener('click', () => {
+                    console.log('深浅色切换按钮被点击了！ (卡片输出页)');
+                    body.classList.toggle('dark-mode');
+                    const isDarkModeActive = body.classList.contains('dark-mode');
+                    localStorage.setItem('darkMode', isDarkModeActive ? 'enabled' : 'disabled');
+                    toggleButton.textContent = isDarkModeActive ? '☀️' : '🌙';
+                    toggleButton.setAttribute('aria-label', isDarkModeActive ? '切换浅色模式' : '切换深色模式');
+                });
+            }
+            // === 深浅色模式处理逻辑结束 ===
+
+
+            // 加载并显示 localStorage 中的搜索结果
+            const geminiResponse = localStorage.getItem('geminiResponse');
+            if (geminiResponse) {
+                try {
+                    const data = JSON.parse(geminiResponse);
+                    displayMarkdownAsCardsWithCenteredAndBoldTitles(data, '## -- 卡片分隔 -- ##');
+                    localStorage.removeItem('geminiResponse'); // 显示后移除数据
+                } catch (error) {
+                    console.error('解析存储的响应失败:', error);
+                    resultsDiv.innerHTML = '<p class="error">无法显示搜索结果。</p>';
+                }
+            } else {
+                resultsDiv.innerHTML = '<p>没有找到搜索结果。</p>';
+            }
+
+        });
+    </script>
+</body>
+
+</html>

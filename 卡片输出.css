@@ -1,0 +1,628 @@
+/* 卡片输出.css */
+
+/* 全局样式 */
+:root {
+  /* 亮色模式变量 (参考 style.css 调整值，但保留我的变量名) */
+  --background-color: #f7fafc; /* 主背景 */
+  --text-color: #1a202c; /* 主要文本颜色 */
+  --header-bg: #f7fafc; /* 头部背景 */
+  --header-shadow: rgba(0, 0, 0, 0.05);
+  --card-bg: #ffffff; /* 卡片背景 */
+  --card-shadow: rgba(0, 0, 0, 0.08);
+  --input-border: #e2e8f0; /* 输入框边框 */
+  --input-bg: #ffffff; /* 输入框背景 */
+  --button-bg: #4a5568; /* 按钮背景 (accent-color) */
+  --button-text: #fff; /* 按钮文本 */
+  --button-hover-bg: #2d3748; /* 按钮悬停背景 */
+  --toggle-button-bg: #4a5568; /* 切换按钮背景 */
+  --toggle-button-color: #fff; /* 切换按钮颜色 */
+  --placeholder-color: #718096; /* 占位符颜色 (secondary-color) */
+  --link-color: #4a5568; /* 链接颜色 */
+  --secondary-text-color: #718096; /* 辅助文本颜色 */
+  --divider-color: #e2e8f0; /* 分割线颜色 */
+  --card-hover-shadow: rgba(0, 0, 0, 0.3); /* 卡片悬停阴影 */
+}
+
+/* 深色模式下的颜色 */
+body.dark-mode {
+  --background-color: #1a202c;
+  --text-color: #edf2f7;
+  --header-bg: #2d3748;
+  --header-shadow: rgba(0, 0, 0, 0.3);
+  --card-bg: #2d3748;
+  --card-shadow: rgba(0, 0, 0, 0.5);
+  --input-border: #4a5568;
+  --input-bg: #2d3748;
+  --button-bg: #61afef; /* 使用一个更亮的蓝色或保持 accent-color */
+  --button-text: #fff;
+  --button-hover-bg: #529ddb;
+  --toggle-button-bg: #4a4a4a;
+  --toggle-button-color: #bbb;
+  --placeholder-color: #a0aec0;
+  --link-color: #61afef;
+  --secondary-text-color: #a0aec0;
+  --divider-color: #4a5568;
+  --card-hover-shadow: rgba(255, 255, 255, 0.15);
+}
+
+
+/* 深色模式切换按钮样式 */
+.dark-mode-toggle {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  background-color: var(--toggle-button-bg);
+  color: var(--toggle-button-color);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+  border: 1px solid var(--input-border);
+  transition: all 0.3s ease; /* 保持平滑过渡 */
+}
+
+.dark-mode-toggle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif; /* 保持我的字体栈 */
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease; /* 平滑过渡 */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 居中内容 */
+}
+
+/* 头部样式 */
+.header {
+  width: 100%;
+  background-color: var(--header-bg);
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 10px var(--header-shadow);
+  display: flex;
+  justify-content: center; /* 居中 logo */
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid var(--divider-color); /* 整合 style.css */
+}
+
+.logo h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.slogan { /* 新增 */
+  color: var(--secondary-text-color);
+  font-size: 0.9em;
+  text-align: center;
+  margin-top: 5px;
+}
+
+/* 主要内容区域 */
+.main-content {
+  width: 100%;
+  max-width: 960px; /* 限制最大宽度 */
+  padding: 2rem;
+  margin: 2rem 0; /* 上下间距 */
+  flex-grow: 1; /* 占据剩余空间 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 搜索容器 */
+.search-container {
+  background-color: var(--card-bg);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px var(--card-shadow);
+  width: 100%;
+  max-width: 600px; /* 限制搜索框宽度 */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 2rem;
+  border: 1px solid var(--input-border); /* 整合 style.css */
+}
+
+.search-container label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.search-container input[type="file"] {
+  padding: 0.75rem;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  background-color: var(--input-bg);
+  width: 100%;
+  font-size: 1rem;
+  color: var(--text-color); /* 确保文件输入框颜色正确 */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-container input[type="file"]::file-selector-button {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.search-container input[type="file"]::file-selector-button:hover {
+  background-color: var(--button-hover-bg);
+}
+
+.search-container input[type="file"]:focus {
+  border-color: var(--button-bg);
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+  outline: none;
+}
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper input[type="search"] {
+  flex-grow: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--input-border);
+  border-radius: 8px; /* 保持我的圆角 */
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  padding-right: 3rem; /* 为清除按钮留出空间 */
+  /* style.css 的 width: 400px; overflow-x: auto; 被我的 flex-grow: 1 覆盖，更适应响应式 */
+}
+
+.input-wrapper input[type="search"]::placeholder {
+  color: var(--placeholder-color);
+  opacity: 1;
+}
+
+.input-wrapper input[type="search"]:focus {
+  border-color: var(--button-bg);
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+  outline: none;
+}
+
+.clear-button {
+  position: absolute;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--placeholder-color);
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.clear-button:hover {
+  color: var(--text-color);
+}
+
+/* 搜索选项部分 (来自 style.css) */
+.search-options {
+  display: flex;
+  /* 边框从 input-wrapper 继承 */
+  border: 1px solid var(--input-border); /* 增加此行，统一边框 */
+  border-left: none;
+  border-radius: 0 8px 8px 0; /* 与我的输入框圆角匹配 */
+  margin-left: -1px; /* 与输入框连接 */
+}
+
+.select-wrapper {
+  border-right: 1px solid var(--input-border);
+}
+
+#searchScope {
+  padding: 0.75rem 1rem; /* 与输入框内边距匹配 */
+  border: none;
+  background-color: var(--input-bg); /* 使用 input-bg */
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--text-color); /* 使用 text-color */
+  border-radius: 0 0 0 0; /* 移除圆角，由父容器控制 */
+}
+
+/* 按钮样式 */
+button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+button.primary {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  box-shadow: 0 4px 10px rgba(74, 144, 226, 0.2); /* 保持我的阴影风格 */
+}
+
+button.primary:hover {
+  background-color: var(--button-hover-bg);
+  box-shadow: 0 6px 15px rgba(74, 144, 226, 0.3);
+}
+
+button.primary svg {
+  width: 1.2em;
+  height: 1.2em;
+  stroke: var(--button-text); /* 保持我的 SVG 颜色 */
+}
+
+/* 热搜区域 (来自 style.css) */
+.hot-searches {
+  max-width: 600px;
+  margin: 0 auto 20px;
+  padding: 1.5rem; /* 调整内边距 */
+  background-color: var(--card-bg); /* 使用 card-bg */
+  border-radius: 12px; /* 与卡片圆角匹配 */
+  box-shadow: 0 4px 20px var(--card-shadow); /* 与卡片阴影匹配 */
+  border: 1px solid var(--input-border);
+}
+
+.hot-searches p {
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.hot-searches ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.hot-searches li a {
+  display: inline-block;
+  padding: 8px 15px;
+  background-color: var(--input-bg); /* 使用 input-bg 或自定义 */
+  color: var(--text-color); /* 使用 text-color */
+  border-radius: 20px;
+  text-decoration: none;
+  font-size: 0.9em;
+  transition: background-color 0.3s ease;
+}
+
+.hot-searches li a:hover {
+  background-color: var(--divider-color); /* 稍微深一点的颜色 */
+}
+
+/* 搜索结果区域 */
+#searchResults {
+  opacity: 1;
+  transition: opacity 0.5s ease, transform 0.5s ease; /* 增加 transform 过渡 */
+  max-width: 960px; /* 保持我的宽度 */
+  margin: 0 auto 2rem; /* 保持我的外边距 */
+  padding: 2rem; /* 保持我的内边距 */
+  background-color: var(--card-bg);
+  border-radius: 12px; /* 保持我的圆角 */
+  box-shadow: 0 4px 20px var(--card-shadow);
+  min-height: 100px;
+  text-align: center;
+  border: 1px solid var(--input-border); /* 整合 style.css */
+  color: var(--text-color);
+}
+
+/* 搜索结果动画类 (来自 style.css) */
+#searchResults.fade-out {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+#searchResults.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#searchResults ul { /* 整合 style.css */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#searchResults li { /* 整合 style.css */
+  padding: 8px 0;
+  border-bottom: 1px solid var(--divider-color);
+}
+
+#searchResults li:last-child {
+  border-bottom: none;
+}
+
+/* 底部 (来自 style.css) */
+.footer {
+  width: 100%;
+  text-align: center;
+  padding: 1.5rem; /* 调整内边距 */
+  font-size: 0.8em;
+  color: var(--secondary-text-color);
+  background-color: var(--header-bg); /* 使用 header-bg 保持一致 */
+  border-top: 1px solid var(--divider-color);
+  margin-top: auto; /* 推到页面底部 */
+}
+
+
+
+/* 卡片动画 (来自 style.css) */
+@keyframes fadeInUp {
+  from {
+      opacity: 0;
+      transform: translateY(20px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+/* Gemini Results 容器 (来自 style.css) */
+#geminiResults {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px; /* 与上方元素保持间距 */
+}
+
+/* 返回按钮顶栏 (来自 style.css) */
+.top-bar {
+  width: 100%;
+  background-color: #bcc6d1; /* 浅灰色背景 */
+  padding: 20px 25px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #dee2e6;
+  margin-bottom: 30px;
+  /* 深色模式适应 */
+  background-color: var(--header-bg);
+  border-bottom: 1px solid var(--divider-color);
+}
+body.dark-mode .top-bar {
+  background-color: #2d3748; /* 深色模式下的 top-bar 背景 */
+  border-bottom-color: #4a5568;
+}
+
+
+.back-button {
+  background: none;
+  border: none;
+  padding: 10px;
+  margin-right: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: var(--text-color); /* 确保颜色适应深色模式 */
+}
+
+.back-arrow {
+  border: solid currentColor; /* 使用 currentColor 让箭头颜色随父元素文本颜色变化 */
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+  padding: 3px;
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
+
+/* Markdown 卡片样式 (来自 style.css) */
+.markdown-card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.6s ease-out forwards;
+  animation-delay: calc(var(--animation-order) * 0.1s);
+
+  background-color: var(--card-bg); /* 使用 card-bg */
+  color: var(--text-color); /* 使用 text-color */
+  max-width: 600px;
+  margin-bottom: 20px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  padding: 40px;
+  border-radius: 12px; /* 与我的卡片圆角匹配 */
+  box-shadow: 0 4px 20px var(--card-shadow); /* 与我的卡片阴影匹配 */
+  transition: box-shadow 0.3s ease-in-out, transform 0.2s ease-in-out, background-color 0.3s ease; /* 添加背景色过渡 */
+}
+
+.markdown-card:hover {
+  box-shadow: 0px 8px 24px var(--card-hover-shadow); /* 调整阴影增强效果 */
+  transform: translateY(-2px);
+}
+
+/* 特定颜色卡片 (来自 style.css) */
+.markdown-card.card-color-0 {
+  background-color: #569cd9;
+}
+
+.markdown-card.card-color-1 {
+  background-color: #faebd7;
+}
+
+.markdown-card.card-color-2 {
+  background-color: #afeeee;
+}
+
+.markdown-card.card-color-3 {
+  background-color: #e6ee9c;
+}
+
+.markdown-card.card-color-4 {
+  background-color: #ffdab9;
+}
+
+/* 关闭按钮 (来自 style.css) */
+.close-button {
+  background: none;
+  border: none;
+  color: var(--accent-color); /* 使用 accent-color */
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.close-button:hover {
+  color: var(--text-color);
+}
+
+
+/* 辅助类 */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .header {
+      padding: 1rem;
+  }
+  .logo h1 {
+      font-size: 1.8rem;
+  }
+  .main-content {
+      padding: 1rem;
+      margin: 1rem 0;
+  }
+  .search-container {
+      padding: 1.5rem;
+      flex-direction: column; /* 移动端堆叠 */
+  }
+
+  .input-wrapper {
+      flex-direction: column;
+      width: 100%;
+  }
+  .input-wrapper input[type="search"] {
+      border-radius: 8px 8px 0 0;
+      padding-right: 1rem; /* 移除清除按钮留白 */
+  }
+  .clear-button {
+      position: static; /* 移动端显示在下方 */
+      width: auto;
+      height: auto;
+      margin-top: 0.5rem;
+  }
+  .search-options {
+      flex-direction: column;
+      width: 100%;
+      border-radius: 0 0 8px 8px;
+      border-left: 1px solid var(--input-border); /* 修正边框 */
+  }
+  .select-wrapper {
+      width: 100%;
+      border-right: none; /* 移除移动设备上的分隔线 */
+      border-bottom: 1px solid var(--input-border); /* 添加底部边框 */
+  }
+  #searchScope {
+      width: 100%;
+      border-radius: 0;
+  }
+  button.primary {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border-radius: 0 0 8px 8px; /* 适应新的底部圆角 */
+  }
+  .dark-mode-toggle {
+      top: 1rem;
+      right: 1rem;
+      width: 40px;
+      height: 40px;
+      font-size: 1.2rem;
+  }
+  .hot-searches, #searchResults, .markdown-card {
+      padding: 1.5rem;
+  }
+  .hot-searches ul {
+      justify-content: center; /* 移动端居中热搜词 */
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+      padding: 0.75rem;
+  }
+  .logo h1 {
+      font-size: 1.5rem;
+  }
+  .main-content {
+      padding: 0.75rem;
+  }
+  .search-container {
+      padding: 1rem;
+  }
+  .search-container label {
+      font-size: 1rem;
+  }
+  .input-wrapper input[type="search"],
+  .search-container input[type="file"] {
+      font-size: 0.9rem;
+      padding: 0.6rem 0.8rem;
+  }
+  button {
+      font-size: 0.9rem;
+  }
+  .hot-searches, #searchResults, .markdown-card {
+      padding: 1rem;
+  }
+}

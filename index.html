@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+    <script src="卡片输出.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>构序</title>
+    <link rel="stylesheet" href="卡片输出.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+
+    <button class="dark-mode-toggle" aria-label="切换深色/浅色模式">🌙</button>
+
+    <header class="header">
+        <div class="logo">
+            <h1>构序</h1>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="search-container simple">
+            <label for="promptFileInput">选择 Prompt 文件 (.txt):</label>
+            <input type="file" id="promptFileInput" accept=".txt">
+            
+            <div class="input-wrapper">
+                <label for="searchInput" class="visually-hidden">搜索关键词</label>
+                <input type="search" id="searchInput" placeholder="请输入关键词进行搜索...">
+                <button class="clear-button" aria-label="清除搜索" style="display: none;">&times;</button>
+            </div>
+            <button id="searchButton" aria-label="开始搜索" class="primary">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                搜索
+            </button>
+        </div>
+
+
+        <div id="searchResults" aria-live="polite">
+            <p>请先选择一个包含 Prompt 的 .txt 文件。</p>
+        </div>
+</body>
+</html>
